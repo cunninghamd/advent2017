@@ -33,6 +33,7 @@ namespace Advent2017
                 @"1158 2832 697 113 121 397 1508 118 2181 2122 809 2917 134 2824 3154 2791",
             };
             Console.WriteLine("The checksum is: {0}", advent.Day2(puzzleInput2));
+            Console.WriteLine("The dividend checksum is: {0}", advent.Day2Part2(puzzleInput2));
         }
     }
     
@@ -70,13 +71,20 @@ namespace Advent2017
             return Int32.Parse(puzzleInput[opposite].ToString());
         }
         
-        // Day 2
-        // Part 1 Result:
-        // Part 2 Result:
+        // Day 2, Result: 53978
         public int Day2(List<string> puzzleInput) {
             var sum = 0;
             for (var i = 0; i < puzzleInput.Count; i++) {
                 sum += getCheckSum(puzzleInput[i]);
+            }
+            return sum;
+        }
+        
+        // Day 2, Part 2, Result: 314
+        public int Day2Part2(List<string> puzzleInput) {
+            var sum = 0;
+            for (var i = 0; i < puzzleInput.Count; i++) {
+                sum += getDivisibleChecksum(puzzleInput[i]);
             }
             return sum;
         }
@@ -99,15 +107,40 @@ namespace Advent2017
             
             return max - min;
         }
+        
+        int getDivisibleChecksum(string row) {
+            var cells = row.Split(null);
+            for (var i = 0; i < cells.Length; i++) {
+                var c = Int32.Parse(cells[i].Trim());
+                
+                for (var j = 0; j < cells.Length; j++) {
+                    var d = Int32.Parse(cells[j].Trim());
+                    
+                    if (i != j && c > d && c % d == 0) {
+                        return c / d;
+                    }
+                }
+            }
+            
+            return 0;
+        }
     }
     
     public class Advent2017Tests {
         List<string> spreadsheet = new List<string> {@"5 1 9 5", @"7 5 3", @"2 4 6 8"};
         
+        List<string> spreadsheet2 = new List<string> {@"5 9 2 8", @"9 4 7 3", @"3 8 6 5"};
+        
         [Fact]
         public void Day2ChecksumTest() {
             var advent = new Advent2017();
             Assert.Equal(18, advent.Day2(spreadsheet));
+        }
+        
+        [Fact]
+        public void Day2DivisibleChecksumTest() {
+            var advent = new Advent2017();
+            Assert.Equal(9, advent.Day2Part2(spreadsheet2));
         }
     }
 }
