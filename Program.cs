@@ -172,6 +172,12 @@ namespace Advent2017
             
             return steps;
         }
+        
+        public int Day3Part2(int puzzleInput) {
+            var sum = 0;
+            
+            return sum;
+        }
     }
     
     public class Advent2017Tests {
@@ -203,6 +209,12 @@ namespace Advent2017
         public void Day3SpiralTest() {
             var advent = new Advent2017();
             Assert.Equal(2, advent.Day3(23));
+        }
+        
+        [Fact]
+        public void Day3SpiralSumTest() {
+            var advent = new Advent2017();
+            Assert.Equal(11, advent.Day3Part2(10));
         }
     }
 }
