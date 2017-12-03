@@ -34,6 +34,10 @@ namespace Advent2017
             };
             Console.WriteLine("The checksum is: {0}", advent.Day2(puzzleInput2));
             Console.WriteLine("The dividend checksum is: {0}", advent.Day2Part2(puzzleInput2));
+            
+            var start = 325489;
+            Console.WriteLine("Advent Day 3:");
+            Console.WriteLine("The number of steps are: {0}", advent.Day3(start));
         }
     }
     
@@ -125,8 +129,46 @@ namespace Advent2017
             return 0;
         }
         
-        public int Day3(int start, List<string> spiral) {
-            var steps = 0;
+        // Day 3, Result: 552
+        public int Day3(int start) {
+            // each bottom right corner of the spiral is represented by the square of n + 2
+            // i.e.: 1^2, 3^2, 5^2 sets each bottom corner at 1, 9 and 25
+            // each bottom right corner coordinate increments by 1
+            // i.e.: 0,0 1,1 2,2
+            // so we need to determine the closest corner, then traverse back to 1^2
+            // then work forward to our corner coordinate
+            
+            var root = Int32.Parse(Math.Floor(Math.Sqrt(start)).ToString()) + 1; // if 23, sqrt is 4.x, so add 1
+            
+            var diff = 1;
+            
+            for (var i = root; i > 1; i -= 2) {
+                diff++;
+            }
+            
+            var coord = root - diff;
+            
+            var coords = new int[] {coord, coord};
+            
+            // now I need to determine the plane I'm on
+            // i.e.: 23 is on the lower plane, so is easy to figure out coords (0,2)
+            
+            var horizontal = true;
+            for (var i = (root * root) - 1; i >= start; i--) {
+                // starting at 2,2, subtrack 1 from x until we hit mod 0, then subtrack from y
+                
+                if (horizontal) {
+                    coords[0]--;
+                } else {
+                    coords[1]--;
+                }
+                
+                if (i % root == 0) {
+                    horizontal = !horizontal;
+                }
+            }
+            
+            var steps = Math.Abs(coords[0]) + Math.Abs(coords[1]);
             
             return steps;
         }
@@ -137,13 +179,13 @@ namespace Advent2017
         
         List<string> spreadsheet2 = new List<string> {@"5 9 2 8", @"9 4 7 3", @"3 8 6 5"};
         
-        List<string> spiral = new List<string> {
-            @"17 16 15 14 13",
-            @"18 5 4 3 12",
-            @"19 6 1 2 11",
-            @"20 7 8 9 10",
-            @"21 22 23 24 25"
-        };
+        // List<string> spiral = new List<string> {
+        //     @"17 16 15 14 13",
+        //     @"18 5 4 3 12",
+        //     @"19 6 1 2 11",
+        //     @"20 7 8 9 10",
+        //     @"21 22 23 24 25",
+        // };
         
         [Fact]
         public void Day2ChecksumTest() {
@@ -160,7 +202,7 @@ namespace Advent2017
         [Fact]
         public void Day3SpiralTest() {
             var advent = new Advent2017();
-            Assert.Equal(2, advent.Day3(23, spiral));
+            Assert.Equal(2, advent.Day3(23));
         }
     }
 }
