@@ -124,12 +124,26 @@ namespace Advent2017
             
             return 0;
         }
+        
+        public int Day3(int start, List<string> spiral) {
+            var steps = 0;
+            
+            return steps;
+        }
     }
     
     public class Advent2017Tests {
         List<string> spreadsheet = new List<string> {@"5 1 9 5", @"7 5 3", @"2 4 6 8"};
         
         List<string> spreadsheet2 = new List<string> {@"5 9 2 8", @"9 4 7 3", @"3 8 6 5"};
+        
+        List<string> spiral = new List<string> {
+            @"17 16 15 14 13",
+            @"18 5 4 3 12",
+            @"19 6 1 2 11",
+            @"20 7 8 9 10",
+            @"21 22 23 24 25"
+        };
         
         [Fact]
         public void Day2ChecksumTest() {
@@ -141,6 +155,12 @@ namespace Advent2017
         public void Day2DivisibleChecksumTest() {
             var advent = new Advent2017();
             Assert.Equal(9, advent.Day2Part2(spreadsheet2));
+        }
+        
+        [Fact]
+        public void Day3SpiralTest() {
+            var advent = new Advent2017();
+            Assert.Equal(2, advent.Day3(23, spiral));
         }
     }
 }
