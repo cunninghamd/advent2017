@@ -1,6 +1,7 @@
 ﻿using System;
 using Xunit;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Advent2017
 {
@@ -555,6 +556,7 @@ namespace Advent2017
             };
             Console.WriteLine("Advent Day 4:");
             Console.WriteLine("The number of valid passphrases is: {0}", advent.Day4(passphrases));
+            Console.WriteLine("The number of valid passphrases without anagrams is: {0}", advent.Day4(passphrases, true));
         }
     }
     
@@ -799,7 +801,7 @@ namespace Advent2017
         }
         
         // Day 4, Result: 451
-        // Day 4, Part 2 Result: 
+        // Day 4, Part 2 Result: 223
         public int Day4(List<string> passphrases, bool preventAnagrams = false) {
             var v = 0;
             for (var i = 0; i < passphrases.Count; i++) {
@@ -808,7 +810,7 @@ namespace Advent2017
                 var valid = true;
                 for (var j = 0; j < passphraseWords.Length; j++) {
                     for (var k = 0; k < passphraseWords.Length; k++) {
-                        if (j != k && !preventAnagrams ? passphraseWords[j] == passphraseWords[k] : areAnagrams(passphraseWords[j], passphraseWords[k])) {
+                        if (j != k && (!preventAnagrams ? passphraseWords[j] == passphraseWords[k] : areAnagrams(passphraseWords[j], passphraseWords[k]))) {
                             valid = false;
                             break;
                         }
@@ -826,7 +828,7 @@ namespace Advent2017
         }
         
         public bool areAnagrams(string word1, string word2) {
-            return true;
+            return String.Concat(word1.OrderBy(c => c)) == String.Concat(word2.OrderBy(c => c));
         }
     }
     
@@ -887,9 +889,10 @@ namespace Advent2017
             Assert.Equal(2, advent.Day4(passphrases));
         }
         
+        [Fact]
         public void Day4AnagramTest() {
             var advent = new Advent2017();
-            Assert.Equal(0, advent.Day4(passphraseAnagrams, true));
+            Assert.Equal(3, advent.Day4(passphraseAnagrams, true));
         }
     }
 }
