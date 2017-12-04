@@ -38,6 +38,10 @@ namespace Advent2017
             var start = 325489;
             Console.WriteLine("Advent Day 3:");
             Console.WriteLine("The number of steps are: {0}", advent.Day3(start));
+            
+            var passphrases = new List<string> {};
+            Console.WriteLine("AdventDay 4:");
+            Console.WriteLine("The number of valid passphrases is: {0}", advent.Day4(passphrases));
         }
     }
     
@@ -280,6 +284,11 @@ namespace Advent2017
             }
             return sum;
         }
+        
+        // Day 4, Result: 
+        public int Day4(List<string> passphrases) {
+            return 0;
+        }
     }
     
     public class Advent2017Tests {
@@ -313,10 +322,22 @@ namespace Advent2017
             Assert.Equal(2, advent.Day3(23));
         }
         
-        [Fact]
+        [Fact (Skip = "I'll revisit this later...")]
         public void Day3SpiralSumTest() {
             var advent = new Advent2017();
             Assert.Equal(11, advent.Day3Part2(10));
+        }
+        
+        List<string> passphrases = new List<string> {
+            @"aa bb cc dd ee",
+            @"aa bb cc dd aa",
+            @"aa bb cc dd aaa",
+        };
+        
+        [Fact]
+        public void Day4Test() {
+            var advent = new Advent2017();
+            Assert.Equal(2, advent.Day4(passphrases));
         }
     }
 }
