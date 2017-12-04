@@ -159,7 +159,8 @@ namespace Advent2017
                 
                 if (horizontal) {
                     coords[0]--;
-                } else {
+                }
+                else {
                     coords[1]--;
                 }
                 
@@ -173,9 +174,110 @@ namespace Advent2017
             return steps;
         }
         
+        // Day 3, Part 2, Result: 
         public int Day3Part2(int puzzleInput) {
-            var sum = 0;
+            var sum = 1;
             
+            // {x, y}
+            var coords = new int[] {0, 0};
+            var i = 1;
+            var n = 1;
+            var count = 1;
+            var direction = Direction.North;
+            var spiral = new Dictionary<string, int>{};
+            
+            while (sum <= puzzleInput) {
+                Console.WriteLine("Adding coord: {0},{1}={2}", coords[0], coords[1], sum);
+                //Console.WriteLine("sum: {0}", sum);
+                spiral.Add(coords[0].ToString() + "," + coords[1].ToString(), getAdjacentSum(coords, spiral));
+                
+                Console.WriteLine("n, i, count: {0} {1}", n, i, count);
+                
+                // move to next cell
+                if (n > 1 && i == count) {
+                    i = 0;
+                    if (direction == Direction.East) {
+                        direction = Direction.North;
+                    } else {
+                        direction++;
+                    }
+                    Console.WriteLine("setting direction to: {0}", direction);
+                }
+                // reset at end of square
+                
+                if (n == count * count) {
+                    direction = Direction.North;
+                    coords[0]++;
+                    count += 2;
+                    n = 1;
+                    i = 1;
+                }
+                else {
+                    switch (direction) {
+                        case Direction.North: {
+                            coords[1]++;
+                            break;
+                        }
+                        case Direction.East: {
+                            coords[0]++;
+                            break;
+                        }
+                        case Direction.South: {
+                            coords[1]--;
+                            break;
+                        }
+                        case Direction.West: {
+                            coords[0]--;
+                            break;
+                        }
+                    }
+                    
+                    n++;
+                    i++;
+                }
+                
+                //Console.WriteLine("r, root, direction: {0}, {1}, {2}", r, root, direction);
+                //sum += getAdjacentSum(coords, spiral);
+                //sum++;
+            }
+            
+            foreach (var item in spiral) {
+                Console.WriteLine("key/value: {0}/{1}", item.Key, item.Value);
+            }
+            
+            return getAdjacentSum(coords, spiral);
+        }
+        
+        enum Direction {
+            North = 1,
+            West = 2,
+            South = 3,
+            East = 4,
+        };
+        
+        int getAdjacentSum(int[] coords, Dictionary<string, int> spiral) {
+            // Console.WriteLine("--Spiral--");
+            // foreach (var item in spiral) {
+            //     Console.WriteLine("key/value: {0}/{1}", item.Key, item.Value);
+            // }
+            
+            if (coords[0] == 0 && coords[1] == 0) {
+                return 1;
+            }
+            
+            var sum = 0;
+            for (var x = coords[0] - 1; x < coords[0] + 1; x++) {
+                for (var y = coords[1] - 1; y < coords[1] + 1; y++) {
+                    var coord = x.ToString() + "," + y.ToString();
+                    
+                    //Console.WriteLine("Checking coord: {0}", coord);
+                    
+                    if (coord != coords[0] + "," + coords[1] && spiral.ContainsKey(coord)) {
+                        //Console.WriteLine("Found a value at {0}: {1}", coord, spiral[coord]);
+                        sum = spiral[coord];
+                    }
+                }
+            }
             return sum;
         }
     }
