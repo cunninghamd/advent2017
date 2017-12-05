@@ -39,6 +39,7 @@ namespace Advent2017
             var start = 325489;
             Console.WriteLine("Advent Day 3:");
             Console.WriteLine("The number of steps are: {0}", advent.Day3(start));
+            Console.WriteLine("The first adjacent sum larger than the input is: {0}", advent.Day3Part2(start));
             
             var passphrases = new List<string> {
                 @"vxjtwn vjnxtw sxibvv mmws wjvtxn icawnd rprh",
@@ -693,11 +694,12 @@ namespace Advent2017
             return steps;
         }
         
+        // Day 3, Part 2, Result: 330785
         public int Day3Part2(int puzzleInput) {
             var spiral = new Dictionary<string, int>{};
             
             var coords = new int[] {0,0};
-            var sum = getAdjacentSum(coords, spiral); // value to be stored in cell
+            var sum = 0; // value to be stored in cell
             var n = 1; // value to be stored in cell
             var c = 1; // increment as we spiral each square
             var d = 1; // depth of square we're spiralling
@@ -705,9 +707,9 @@ namespace Advent2017
             
             var direction = Direction.East;
             
-            while (n < puzzleInput) {
-                spiral.Add(coords[0].ToString() + "," + coords[1].ToString(), n);
-                Console.WriteLine("Adding to Spiral: {0},{1}={2}", coords[0].ToString(), coords[1].ToString(), n);
+            while (sum < puzzleInput) {
+                sum = getAdjacentSum(coords, spiral);
+                spiral.Add(coords[0].ToString() + "," + coords[1].ToString(), sum);
                 
                 if (n == d * d) {
                     c = 0;
@@ -747,81 +749,7 @@ namespace Advent2017
                 e++;
             }
             
-            return n + getAdjacentSum(coords, spiral);
-        }
-        
-        // Day 3, Part 2, Result: 
-        public int oldDay3Part2(int puzzleInput) {
-            var sum = 1;
-            
-            // {x, y}
-            var coords = new int[] {0, 0};
-            var i = 1;
-            var n = 1;
-            var count = 1;
-            var direction = Direction.North;
-            var spiral = new Dictionary<string, int>{};
-            
-            while (sum <= puzzleInput) {
-                Console.WriteLine("Adding coord: {0},{1}={2}", coords[0], coords[1], sum);
-                //Console.WriteLine("sum: {0}", sum);
-                spiral.Add(coords[0].ToString() + "," + coords[1].ToString(), getAdjacentSum(coords, spiral));
-                
-                Console.WriteLine("n, i, count: {0} {1}", n, i, count);
-                
-                // move to next cell
-                if (n > 1 && i == count) {
-                    i = 0;
-                    if (direction == Direction.East) {
-                        direction = Direction.North;
-                    } else {
-                        direction++;
-                    }
-                    Console.WriteLine("setting direction to: {0}", direction);
-                }
-                // reset at end of square
-                
-                if (n == count * count) {
-                    direction = Direction.North;
-                    coords[0]++;
-                    count += 2;
-                    n = 1;
-                    i = 1;
-                }
-                else {
-                    switch (direction) {
-                        case Direction.North: {
-                            coords[1]++;
-                            break;
-                        }
-                        case Direction.East: {
-                            coords[0]++;
-                            break;
-                        }
-                        case Direction.South: {
-                            coords[1]--;
-                            break;
-                        }
-                        case Direction.West: {
-                            coords[0]--;
-                            break;
-                        }
-                    }
-                    
-                    n++;
-                    i++;
-                }
-                
-                //Console.WriteLine("r, root, direction: {0}, {1}, {2}", r, root, direction);
-                //sum += getAdjacentSum(coords, spiral);
-                //sum++;
-            }
-            
-            foreach (var item in spiral) {
-                Console.WriteLine("key/value: {0}/{1}", item.Key, item.Value);
-            }
-            
-            return getAdjacentSum(coords, spiral);
+            return sum;
         }
         
         enum Direction {
@@ -928,7 +856,7 @@ namespace Advent2017
         [Fact] // (Skip = "I'll revisit this later...")]
         public void Day3SpiralSumTest() {
             var advent = new Advent2017();
-            Assert.Equal(806, advent.Day3Part2(25));
+            Assert.Equal(806, advent.Day3Part2(747));
         }
         
         List<string> passphrases = new List<string> {
