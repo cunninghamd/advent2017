@@ -693,8 +693,65 @@ namespace Advent2017
             return steps;
         }
         
-        // Day 3, Part 2, Result: 
         public int Day3Part2(int puzzleInput) {
+            var spiral = new Dictionary<string, int>{};
+            
+            var coords = new int[] {0,0};
+            var sum = getAdjacentSum(coords, spiral); // value to be stored in cell
+            var n = 1; // value to be stored in cell
+            var c = 1; // increment as we spiral each square
+            var d = 1; // depth of square we're spiralling
+            var e = c; // keeps track of when to change direction
+            
+            var direction = Direction.East;
+            
+            while (n < puzzleInput) {
+                spiral.Add(coords[0].ToString() + "," + coords[1].ToString(), n);
+                Console.WriteLine("Adding to Spiral: {0},{1}={2}", coords[0].ToString(), coords[1].ToString(), n);
+                
+                if (n == d * d) {
+                    c = 0;
+                    d += 2;
+                    e = 0;
+                    direction = Direction.North;
+                    coords[0]++; // move to next spiral
+                }
+                else if (e == d - 1) {
+                    direction++;
+                    e = 0;
+                }
+                
+                if (c != 0) {
+                    switch (direction) {
+                        case Direction.North: {
+                            coords[1]++;
+                            break;
+                        }
+                        case Direction.East: {
+                            coords[0]++;
+                            break;
+                        }
+                        case Direction.South: {
+                            coords[1]--;
+                            break;
+                        }
+                        case Direction.West: {
+                            coords[0]--;
+                            break;
+                        }
+                    }
+                }
+                
+                n++;
+                c++;
+                e++;
+            }
+            
+            return n + getAdjacentSum(coords, spiral);
+        }
+        
+        // Day 3, Part 2, Result: 
+        public int oldDay3Part2(int puzzleInput) {
             var sum = 1;
             
             // {x, y}
@@ -774,26 +831,17 @@ namespace Advent2017
             East = 4,
         };
         
-        int getAdjacentSum(int[] coords, Dictionary<string, int> spiral) {
-            // Console.WriteLine("--Spiral--");
-            // foreach (var item in spiral) {
-            //     Console.WriteLine("key/value: {0}/{1}", item.Key, item.Value);
-            // }
-            
+        public int getAdjacentSum(int[] coords, Dictionary<string, int> spiral) {
             if (coords[0] == 0 && coords[1] == 0) {
                 return 1;
             }
             
             var sum = 0;
-            for (var x = coords[0] - 1; x < coords[0] + 1; x++) {
-                for (var y = coords[1] - 1; y < coords[1] + 1; y++) {
+            for (var x = coords[0] - 1; x <= coords[0] + 1; x++) {
+                for (var y = coords[1] - 1; y <= coords[1] + 1; y++) {
                     var coord = x.ToString() + "," + y.ToString();
-                    
-                    //Console.WriteLine("Checking coord: {0}", coord);
-                    
-                    if (coord != coords[0] + "," + coords[1] && spiral.ContainsKey(coord)) {
-                        //Console.WriteLine("Found a value at {0}: {1}", coord, spiral[coord]);
-                        sum = spiral[coord];
+                    if (spiral.ContainsKey(coord)) {
+                        sum += spiral[coord];
                     }
                 }
             }
@@ -863,10 +911,24 @@ namespace Advent2017
             Assert.Equal(2, advent.Day3(23));
         }
         
-        [Fact (Skip = "I'll revisit this later...")]
+        [Fact]
+        public void Day3AdjacentSumTest() {
+            var advent = new Advent2017();
+            
+            var spiral = new Dictionary<string, int> {
+                {"0,0", 1},
+                {"1,0", 1},
+                {"1,1", 2},
+                {"0,1", 4},
+            };
+            
+            Assert.Equal(5, advent.getAdjacentSum(new int[] {-1, 1}, spiral));
+        }
+        
+        [Fact] // (Skip = "I'll revisit this later...")]
         public void Day3SpiralSumTest() {
             var advent = new Advent2017();
-            Assert.Equal(11, advent.Day3Part2(10));
+            Assert.Equal(806, advent.Day3Part2(25));
         }
         
         List<string> passphrases = new List<string> {
