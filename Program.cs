@@ -28,6 +28,8 @@ namespace Advent2017
             Console.WriteLine("The number of valid passphrases without anagrams is: {0}", advent.Day4(PuzzleInputs.Day4, true));
             
             Console.WriteLine("Advent Day 5:");
+            Console.WriteLine("The number of steps to exit the maze are: {0}", advent.Day5(PuzzleInputs.Day5));
+            Console.WriteLine("the number of steps to exit the strange maze are: {0}", advent.Day5(PuzzleInputs.Day5, true));
         }
     }
     
